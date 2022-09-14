@@ -1,18 +1,23 @@
 pub mod endpoint;
 pub mod client;
-pub mod response;
+pub mod game_server;
+
+pub(crate) mod helper;
+
 
 mod tests {
-    use std::env;
-
-    use crate::client::TebexClient;
 
     #[tokio::test]
-    async fn information() {
-        let secret = env::var("TEBEX_SECRET").unwrap();
-        let client = TebexClient::new(secret.as_str());
+    async fn information() -> Result<(), Box<dyn std::error::Error>>{
+        use std::env;
+        use crate::client::TebexClient;
 
-        let information = client.get_information().await;
+        let secret = env::var("TEBEX_SECRET").unwrap();
+        let mut client = TebexClient::new(secret.as_str());
+
+        let information = client.get_information().await?;
         println!("{:?}", information);
+
+        Ok(())
     }
 }

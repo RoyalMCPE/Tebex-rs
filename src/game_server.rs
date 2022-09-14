@@ -1,11 +1,21 @@
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
-pub struct GameServerInformationResponse {
-    pub account: GameServerAccount,
-    pub server: GameServerInformation
+pub struct GameServer {
+    account: GameServerAccount,
+    server: GameServerInformation
     // TODO: Investigate the analytics response
 }
 
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
+impl GameServer {
+    pub fn get_account_info(&self) -> GameServerAccount {
+        self.account.clone()
+    }
+
+    pub fn get_server_info(&self) -> (u32, String) {
+        (self.server.id, self.server.name.clone())
+    }
+}
+
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub struct GameServerAccount {
     pub id: u32,
     pub domain: String,
@@ -13,7 +23,7 @@ pub struct GameServerAccount {
     // currency
     pub online_mode: bool,
     pub game_type: GameType,
-    pub log_events: bool
+    pub log_events: bool // TODO: Figure out how this is useful and document
 }
 
 #[derive(serde::Serialize, serde::Deserialize, Debug)]
@@ -22,7 +32,7 @@ pub struct GameServerInformation {
     name: String
 }
 
-#[derive(serde::Serialize, serde::Deserialize, Debug)]
+#[derive(Debug, Clone, serde::Serialize, serde::Deserialize)]
 pub enum GameType {
     #[serde(rename(serialize = "Minecraft: Java Edition", deserialize = "Minecraft: Java Edition"))]
     MinecraftJavaEdition,
