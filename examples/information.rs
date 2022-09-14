@@ -2,16 +2,12 @@ use std::env;
 use tebex_rs::client::TebexClient;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
+async fn main() {
     let secret = env::var("TEBEX_SECRET").unwrap();
-    let mut client = TebexClient::new(&secret[..]);
+    let client = TebexClient::new(&secret[..]);
 
-    let information = client.get_information().await?;
-    let account = information.get_account();
-
-    println!("Account Name: {}", account.name);
-    println!("Store Domain: {}", account.domain);
-    println!("Game Type: {:?}", account.game_type);
-    
-    Ok(())
+    let information = client.get_information().await;
+    println!("Account Name: {}", information.account.name);
+    println!("Store Domain: {}", information.account.domain);
+    println!("Game Type: {:?}", information.account.game_type);
 }
